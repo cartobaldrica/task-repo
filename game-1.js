@@ -6,7 +6,7 @@ const c = document.getElementById('c');
 c.width = 640;
 c.height = 640;
 let point = 0;
-const g = c.getContext('2d');
+const g = c.getContext('2d'); //base canvas element
 let d = 'up';
 let dx = 20, dy = 20;
 let food = { x: getRandomArbitrary(1, 640), y: getRandomArbitrary(1, 640) };
@@ -38,7 +38,7 @@ const drawSnake = () => {
 const checkIfLegalMove = (s) => {
     return s.every(pos => pos.x > 0 && pos.x < 640 && pos.y > 0 && pos.y < 640);
 }
-
+//move the snake across the screen
 const moveSnake = (timestamp) => {
     if(!f) {
         return;
@@ -49,6 +49,7 @@ const moveSnake = (timestamp) => {
 
     const oldS = s;
     s = s.map((p, i) => {
+        //move function takes the direction and moves relative to the current position
         return i === 0 ? MOVE[d](p) : oldS[i - 1];
     });
     const legal = checkIfLegalMove(s);
@@ -91,7 +92,7 @@ const intro = () => {
     
     g.textAlign = 'center';
     
-    g.fillText('Play Snake - press Enter to Start', 320, 320);
+    g.fillText('Play Snake - Click to Start, Please', 320, 320);
 }
 
 const startGame = () => {
@@ -121,17 +122,27 @@ const checkFoodCollision = () => {
     return ((food.x - Math.floor( 5 * Math.PI) < s[0].x ) || (food.x + Math.floor( 5 * Math.PI)) > s[0].x) && 
     ((food.y - Math.floor( 5 * Math.PI) < s[0].y ) || (food.y + Math.floor( 5 * Math.PI)) > s[0].y)
 }
+//activate game on click
+document.querySelector('.snake').addEventListener('mousedown',function(e){
+    e.preventDefault();
+    if(!f) {
+        f = true;
+        startGame();
+    }
+})
 
+//keyboard control listener
 window.addEventListener('keydown', (e) => {
     const { key } = e;
     switch(key) {
-        case 'Enter':
+        //CHANGE ENTER TO ANOTHER KEY OR A CLICK OF THE WINDOW
+       /* case 'p':
             e.preventDefault();
             if(!f) {
                 f = true;
                 startGame();
             }
-            break;
+            break;*/
         case 's':
         case 'ArrowDown':
             if(d === 'up' && s.length > 1) {
